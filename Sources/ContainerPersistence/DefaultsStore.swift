@@ -26,6 +26,7 @@ public enum DefaultsStore {
         case buildRosetta = "build.rosetta"
         case defaultDNSDomain = "dns.domain"
         case defaultBuilderImage = "image.builder"
+        case defaultBuilderDiskSize = "image.builder.diskSize"
         case defaultInitImage = "image.init"
         case defaultKernelBinaryPath = "kernel.binaryPath"
         case defaultKernelURL = "kernel.url"
@@ -69,6 +70,7 @@ public enum DefaultsStore {
         let allKeys: [(Self.Keys, (Self.Keys) -> Any?)] = [
             (.buildRosetta, { Self.getBool(key: $0) }),
             (.defaultBuilderImage, { Self.get(key: $0) }),
+            (.defaultBuilderDiskSize, { Self.getOptional(key: $0) }),
             (.defaultInitImage, { Self.get(key: $0) }),
             (.defaultKernelBinaryPath, { Self.get(key: $0) }),
             (.defaultKernelURL, { Self.get(key: $0) }),
@@ -124,6 +126,8 @@ extension DefaultsStore.Keys {
             return "If defined, the local DNS domain to use for containers with unqualified names."
         case .defaultBuilderImage:
             return "The image reference for the utility container that `container build` uses."
+        case .defaultBuilderDiskSize:
+            return "The size of the writable layer for the builder container (e.g. 64GB)."
         case .defaultInitImage:
             return "The image reference for the default initial filesystem image."
         case .defaultKernelBinaryPath:
@@ -144,6 +148,8 @@ extension DefaultsStore.Keys {
         case .defaultDNSDomain:
             return String.self
         case .defaultBuilderImage:
+            return String.self
+        case .defaultBuilderDiskSize:
             return String.self
         case .defaultInitImage:
             return String.self
@@ -168,6 +174,8 @@ extension DefaultsStore.Keys {
         case .defaultBuilderImage:
             let tag = String(cString: get_container_builder_shim_version())
             return "ghcr.io/apple/container-builder-shim/builder:\(tag)"
+        case .defaultBuilderDiskSize:
+            return "64GB"
         case .defaultInitImage:
             let tag = String(cString: get_swift_containerization_version())
             guard tag != "latest" else {

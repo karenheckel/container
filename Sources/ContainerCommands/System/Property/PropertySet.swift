@@ -61,6 +61,10 @@ extension Application {
                     throw ContainerizationError(.invalidArgument, message: "invalid image reference: \(value)")
                 }
                 DefaultsStore.set(value: value, key: key)
+            case .defaultBuilderDiskSize:
+                _ = try Parser.resources(cpus: nil, memory: nil, storage: value)
+                DefaultsStore.set(value: value, key: key)
+                return
             case .defaultKernelBinaryPath:
                 DefaultsStore.set(value: value, key: key)
             case .defaultKernelURL:
